@@ -1,5 +1,7 @@
 ## Intelimetrica
 
+En la carpeta de core, agregue un archivo archivo que se llame `.env` dentro de el pegue lo siguiente `DATABASE_URL=postgresql://root:123@postgres:5432/restaurants` y guarde los cambios.
+
 Para iniciar el proyecto ejecute el siguiente comando
 
 * `make start-container` para levantar la base de datos y el servicio de fastpi
