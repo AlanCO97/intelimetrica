@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgis/postgis:12-3.4-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      retries: 5
+
+  fastapi:
+    build: .
+    ports:
+      - "8000:8000"
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+volumes:
+  postgres:
